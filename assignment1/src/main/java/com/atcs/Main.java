@@ -1,19 +1,18 @@
 package com.atcs;
 
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.atcs.utils.DataReader;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 
 public class Main {
     public static void main(String[] args) {
-        	
-        try (CSVReader reader = new CSVReader(new FileReader("src/main/resources/data/ml-latest-small/ratings.csv"))) {
+        try (CSVReader reader = new CSVReader(DataReader.getRatingsBufferedReader())) {
             List<String[]> rows = reader.readAll(); 
 
             
