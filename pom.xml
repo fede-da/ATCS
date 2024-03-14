@@ -10,5 +10,6 @@
 
     <modules>
         <module>assignment1</module>
+        <module>assignment2</module>
     </modules>
 </project>
