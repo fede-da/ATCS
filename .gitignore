@@ -1,3 +1,4 @@
+# Existing entries
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -15,3 +16,70 @@ buildNumber.properties
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+
+# macOS - Files and directories to ignore
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+# Thumbnails
+._*
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows - Files and directories to ignore
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
+
+# IntelliJ IDEA - Files and directories to ignore
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Eclipse - Additional files and directories to ignore
+.settings/
+*.pydevproject
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+.recommenders
+
+# Virtual Machine files
+*.vmwarevm
+*.vmx
+*.vmdk
+
+# Added to cover further Java/Maven related files not included above
+**/target/
+*.log
+
