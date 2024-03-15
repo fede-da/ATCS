@@ -24,17 +24,14 @@ public class UserRating {
 	public void addMovieWithRating(Integer movieId, Double movieRating){
 		movieRatings.put(movieId, movieRating);
 	}
-	/**
-	 * This method performs addition on two integers.
-	 *
-	 * @return Returns user's movies ratings average
-	 */
-	public Double getRatingAvg(){
-		Double sum = 0.0;
-		for(Map.Entry<Integer, Double> entry : movieRatings.entrySet()){
-			sum+= entry.getValue();
-		}
-		return sum/movieRatings.size();
+	public Map<Integer, Double> getMovieRatings() {
+		return movieRatings;
+	}
+	
+	@Override
+	public String toString() {
+		return "UserRating [userId=" + userId + ", movieRatings=" + movieRatings + ", timestamp=" + timestamp + "]";
 	}
 
+	
 }
