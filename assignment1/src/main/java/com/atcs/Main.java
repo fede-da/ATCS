@@ -22,46 +22,27 @@ public class Main {
 			Map <Integer, Map<Integer, Double>> itemRatingsMap = new HashMap<>(); 
 
 			//TODO: sostituire 300 con rows.size()
-			for (int i=1; i<300; i++) {
-				List<Map<Integer,Double>> userList = new ArrayList<>(); 
-				Map<Integer,Double> userItemRatings = new HashMap<>(); 
-				UserRating data = new UserRating();
-				String[] row = rows.get(i);
-				int userId = Integer.parseInt(row[0]); 
-				int movieId = Integer.parseInt(row[1]);
-				Double rating = Double.parseDouble(row[2]); 
-				data.setUserId(userId);
-				data.addMovieWithRating(movieId , rating);
-				data.setTimestamp(Long.parseLong(row[3]));
+			for (int i = 1; i < 300; i++) {
+				UserRating currentUserData = new UserRating(rows.get(i));
+				int userId = currentUserData.getUserId();
 
-				if (userRatingsMap.containsKey(userId)) {
-					userList = userRatingsMap.get(userId); 
-				}else {
-					userList = new ArrayList<>(); 
-					userRatingsMap.put(userId, userList); 
-				}
-				userList.add(data.getMovieRatings()); 
-				//				System.out.println(userList);  
-				//				System.out.println(userRatingsMap.toString()); 
+				int movieId = Integer.parseInt(rows.get(i)[1]);
+				double rating = Double.parseDouble(rows.get(i)[2]);
 
-				if (itemRatingsMap.containsKey(movieId)) {
-					userItemRatings = itemRatingsMap.get(movieId); 
-				}else {
-					userItemRatings = new HashMap<>(); 
-					itemRatingsMap.put(movieId, userItemRatings); 
+				List<Map<Integer, Double>> userList = userRatingsMap.getOrDefault(userId, new ArrayList<>());
+				if (!userRatingsMap.containsKey(userId)) {
+					userRatingsMap.put(userId, userList);
 				}
-				userItemRatings.put(userId, rating); 
+				userList.add(currentUserData.getMovieRatings());
+
+				Map<Integer, Double> userItemRatings = itemRatingsMap.getOrDefault(movieId, new HashMap<>());
+				if (!itemRatingsMap.containsKey(movieId)) {
+					itemRatingsMap.put(movieId, userItemRatings);
+				}
+				userItemRatings.put(userId, rating);
 			}
 
 			Map<Integer, Double> userAverage = UserRatingUtil.calculateUsersAverage(userRatingsMap); 
-
-			//			Scanner scanner = new Scanner(System.in);
-			//
-			//			System.out.print("Enter the first data: ");
-			//			int dato1 = scanner.nextInt();
-			//
-			//			System.out.print("Enter the second data: ");
-			//			int dato2 = scanner.nextInt();
 
 			System.out.println(UserRatingUtil.calculateUserSimilarity(userRatingsMap, itemRatingsMap, userAverage));
 
@@ -69,4 +50,6 @@ public class Main {
 			e.printStackTrace();
 		}
 	}
+//	Total number of ratings expected: 100836 , actual number of ratings: 100836
+//	{1={2=0.15045803482694003, 3=-0.8390106496954882}, 2={1=0.15045803482694003, 3=-0.24253562503633302}, 3={1=-0.8390106496954882, 2=-0.24253562503633302}}
 }
