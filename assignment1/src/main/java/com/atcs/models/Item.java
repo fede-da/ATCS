@@ -6,6 +6,11 @@ import java.util.Objects;
 
 public class Item implements Cloneable {
     int id;
+
+    public Map<Integer, Double> getUserIdAndItemRating() {
+        return userIdAndItemRating;
+    }
+
     public Map<Integer, Double> userIdAndItemRating;
 
     public Item(int id) {

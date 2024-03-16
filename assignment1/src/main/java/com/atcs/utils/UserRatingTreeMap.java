@@ -21,7 +21,7 @@ public class UserRatingTreeMap {
         }
     }
 
-    public TreeMap<Integer,UserRating> getUserRaings() {
+    public TreeMap<Integer,UserRating> getUserRatings() {
         return userRatings;
     }
 
@@ -31,6 +31,20 @@ public class UserRatingTreeMap {
             usersAvgRatingMap.put(ur.getValue().getUserId(),ur.getValue().getUserRatingAvg());
         }
         return usersAvgRatingMap;
+    }
+
+    public Map<Integer, Map<Integer,Double>> getUserRatingsMap(){
+        Map<Integer, Map<Integer,Double>> to_return= new HashMap<>();
+        for(Map.Entry<Integer,UserRating> _userRatingEntry : userRatings.entrySet()){
+            Map<Integer,Double> tmpMap = new HashMap<>();
+            tmpMap= _userRatingEntry.getValue().getMovieRatingAsInteger();
+            to_return.put(_userRatingEntry.getKey(),tmpMap);
+        }
+        return to_return;
+    }
+
+    Map<Integer,Double> getInnerUserRatingsMapByUserId(Integer userId){
+        return this.getUserRatingsMap().get(userId);
     }
 }
 

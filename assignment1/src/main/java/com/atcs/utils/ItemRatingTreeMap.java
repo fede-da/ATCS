@@ -15,7 +15,7 @@ public class ItemRatingTreeMap {
     public ItemRatingTreeMap(UserRatingTreeMap userRatingTreeMap){
         this.itemRatings = new TreeMap();
         // For each UserRating
-        for (Map.Entry<Integer,UserRating> ur : userRatingTreeMap.getUserRaings().entrySet()) {
+        for (Map.Entry<Integer,UserRating> ur : userRatingTreeMap.getUserRatings().entrySet()) {
             // iterate over its item ratings
             for (Map.Entry<Item, Double> entry : ur.getValue().getMovieRatings().entrySet()) {
                 Item currentItem = entry.getKey();
@@ -31,6 +31,20 @@ public class ItemRatingTreeMap {
                 itemInMap.userIdAndItemRating.put(ur.getValue().getUserId(), rating);
             }
         }
+    }
+
+    public Map<Integer, Map<Integer,Double>> getItemRatingsMap(){
+        Map<Integer, Map<Integer,Double>> to_return= new HashMap<>();
+        for(Map.Entry<Integer,Item> _itemRatingEntry : itemRatings.entrySet()){
+            Map<Integer,Double> tmpMap = new HashMap<>();
+            tmpMap= _itemRatingEntry.getValue().getUserIdAndItemRating();
+            to_return.put(_itemRatingEntry.getKey(),tmpMap);
+        }
+        return to_return;
+    }
+
+    Map<Integer,Double> getInnerItemRatingsMapByItemId(Integer itemId){
+        return this.getItemRatingsMap().get(itemId);
     }
 
     //TODO: Complete below if required

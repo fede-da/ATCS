@@ -8,6 +8,7 @@ import com.atcs.models.UserRating;
 import com.atcs.utils.DataReader;
 import com.atcs.utils.ItemRatingTreeMap;
 import com.atcs.utils.UserRatingTreeMap;
+import com.atcs.utils.UserRatingUtil;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 
@@ -34,7 +35,7 @@ public class Main {
 			ItemRatingTreeMap itemRatingsMap = new ItemRatingTreeMap(userRatingTreeMap);
 			Map<Integer, Double> userAverage = userRatingTreeMap.getUserAvgRatings();
 
-//			System.out.println(UserRatingUtil.calculateUserSimilarity(userRatingsMap, itemRatingsMap, userAverage));
+			System.out.println(UserRatingUtil.calculateUserSimilarity(userRatingTreeMap, itemRatingsMap, userAverage));
 //			System.out.println(UserRatingUtil.calculateUserSimilarity(userRatingsMap, itemRatingsMap, userRatingSet.getUserAvgRatings()));
 
 		} catch (IOException | CsvException e) {

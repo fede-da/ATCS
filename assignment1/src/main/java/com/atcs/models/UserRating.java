@@ -52,5 +52,12 @@ public class UserRating {
 		return "UserRating [userId=" + _userId + ", movieRatings=" + _movieRatings + ", timestamp=" + _timestamp + "]";
 	}
 
+	public Map<Integer, Double> getMovieRatingAsInteger(){
+		Map<Integer,Double> toReturn = new HashMap<>();
+		for(Map.Entry<Item,Double> entry:_movieRatings.entrySet()){
+			toReturn.put(entry.getKey().getId(),entry.getValue());
+		}
+		return toReturn;
+	}
 	
 }
