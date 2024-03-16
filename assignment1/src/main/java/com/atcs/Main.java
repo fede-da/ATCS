@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import com.atcs.models.Item;
 import com.atcs.models.UserRating;
+import com.atcs.recommender.Recommender;
 import com.atcs.utils.DataReader;
 import com.atcs.utils.ItemRatingTreeMap;
 import com.atcs.utils.UserRatingTreeMap;
@@ -36,6 +38,8 @@ public class Main {
 			Map<Integer, Double> userAverage = userRatingTreeMap.getUserAvgRatings();
 
 			System.out.println(UserRatingUtil.calculateUserSimilarity(userRatingTreeMap, itemRatingsMap, userAverage));
+			System.out.println(Recommender.predictUserRatingOnItem(userRatingTreeMap,itemRatingsMap,userRatingTreeMap.getUserRatings().get(1),
+					itemRatingsMap.getItemById(527)));
 //			System.out.println(UserRatingUtil.calculateUserSimilarity(userRatingsMap, itemRatingsMap, userRatingSet.getUserAvgRatings()));
 
 		} catch (IOException | CsvException e) {

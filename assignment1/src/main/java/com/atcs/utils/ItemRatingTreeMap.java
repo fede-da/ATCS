@@ -43,6 +43,10 @@ public class ItemRatingTreeMap {
         return to_return;
     }
 
+    public Item getItemById(int itemId){
+        return this.itemRatings.get(itemId);
+    }
+
     Map<Integer,Double> getInnerItemRatingsMapByItemId(Integer itemId){
         return this.getItemRatingsMap().get(itemId);
     }

@@ -115,6 +115,7 @@ public class UserRatingUtil {
 	 * @param userAverage Map containing average ratings for each user
 	 * @return A map where each userID is mapped to another map containing similarity scores with other users
 	 */
+	//public static Map<Integer, Map<Integer, Double>> calculateUserSimilarity(
 	public static Map<Integer, Map<Integer, Double>> calculateUserSimilarity(
 			UserRatingTreeMap _userRatingsMap,
 			ItemRatingTreeMap _itemRatingsMap,
