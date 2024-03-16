@@ -37,7 +37,7 @@ public class Main {
 			ItemRatingTreeMap itemRatingsMap = new ItemRatingTreeMap(userRatingTreeMap);
 			Map<Integer, Double> userAverage = userRatingTreeMap.getUserAvgRatings();
 
-			System.out.println(UserRatingUtil.calculateUserSimilarity(userRatingTreeMap, itemRatingsMap, userAverage));
+			System.out.println(UserRatingUtil.calculateUserSimilarity(userRatingTreeMap.getUserRatingsMap(), itemRatingsMap.getItemRatingsMap(), userAverage));
 			System.out.println(Recommender.predictUserRatingOnItem(userRatingTreeMap,itemRatingsMap,userRatingTreeMap.getUserRatings().get(1),
 					itemRatingsMap.getItemById(527)));
 //			System.out.println(UserRatingUtil.calculateUserSimilarity(userRatingsMap, itemRatingsMap, userRatingSet.getUserAvgRatings()));

@@ -110,41 +110,33 @@ public class UserRatingUtil {
 	/**
 	 * Calculates the similarity scores between users based on Pearson correlation coefficient.
 	 * 
-	 * @param _userRatingsMap Map containing the ratings given by users for items
-	 * @param _itemRatingsMap Map containing item ratings for users
+	 * @param userRatingsMap Map containing the ratings given by users for items
+	 * @param itemRatingsMap Map containing item ratings for users
 	 * @param userAverage Map containing average ratings for each user
 	 * @return A map where each userID is mapped to another map containing similarity scores with other users
 	 */
 	//public static Map<Integer, Map<Integer, Double>> calculateUserSimilarity(
-	public static Map<Integer, Map<Integer, Double>> calculateUserSimilarity(
-			UserRatingTreeMap _userRatingsMap,
-			ItemRatingTreeMap _itemRatingsMap,
-			Map<Integer, Double> userAverage) {
-
+	public static Map<Integer, Map<Integer, Double>> calculateUserSimilarity(Map<Integer, Map<Integer, Double>> userRatingsMap, Map <Integer, Map<Integer, Double>> itemRatingsMap, Map<Integer, Double> userAverage) {
 		Map<Integer, Map<Integer, Double>> userSimilarityMap = new HashMap<>();
 
-		for (Integer userA : _userRatingsMap.getUserRatings().keySet()) { // Assuming getUserIds() method exists
+		for (Integer userA : userRatingsMap.keySet()) {
 			Map<Integer, Double> similarityScores = new HashMap<>();
-
-			for (Integer userB : _userRatingsMap.getUserRatings().keySet()) {
+			for (Integer userB : userRatingsMap.keySet()) {
 				if (!userA.equals(userB)) {
-					double num = getNumerator(userA, userB, _itemRatingsMap.getItemRatingsMap(), userAverage);
-					double denom1 = getUserDenom(userA, _itemRatingsMap.getItemRatingsMap(), userAverage);
-					double denom2 = getUserDenom(userB, _itemRatingsMap.getItemRatingsMap(), userAverage);
+					double num = getNumerator(userA, userB, itemRatingsMap, userAverage);
+					double denom1 = getUserDenom(userA, itemRatingsMap, userAverage);
+					double denom2 = getUserDenom(userB, itemRatingsMap, userAverage);
 
-					Double similarity = (denom1 == 0.0 || denom2 == 0.0) ? null : num / (denom1 * denom2);
-
-					if (similarity != null) {
-						similarityScores.put(userB, similarity);
+					Double similarity = 0.0;
+					if (denom1 == 0.0 || denom2 == 0.0) {
+						return null;
 					}
+					similarity = num/(denom1*denom2);
+					similarityScores.put(userB, similarity);
 				}
 			}
-
-			if (!similarityScores.isEmpty()) {
-				userSimilarityMap.put(userA, similarityScores);
-			}
+			userSimilarityMap.put(userA, similarityScores);
 		}
-
 		return userSimilarityMap;
 	}
 
