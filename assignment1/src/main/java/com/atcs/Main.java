@@ -24,7 +24,7 @@ public class Main {
 			UserRatingTreeMap userRatingTreeMap = new UserRatingTreeMap();
 
 			//TODO: sostituire 300 con rows.size()
-			for (int i = 1; i < 300; i++) {
+			for (int i = 1; i < 10000; i++) {
 				UserRating currentUserData = new UserRating(rows.get(i));
 				String[] row = rows.get(i);
 				int userId = Integer.parseInt(row[0]);
