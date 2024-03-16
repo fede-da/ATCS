@@ -46,5 +46,10 @@ public class UserRatingTreeMap {
     Map<Integer,Double> getInnerUserRatingsMapByUserId(Integer userId){
         return this.getUserRatingsMap().get(userId);
     }
+    
+    public int getRandomUser() {
+    	Random random = new Random(); 
+    	return (this.userRatings.get(random.nextInt(this.userRatings.size())+1).getUserId()); 
+    }
 }
 

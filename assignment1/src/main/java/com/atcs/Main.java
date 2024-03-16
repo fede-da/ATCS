@@ -24,7 +24,7 @@ public class Main {
 			UserRatingTreeMap userRatingTreeMap = new UserRatingTreeMap();
 
 			//TODO: sostituire 300 con rows.size()
-			for (int i = 1; i < 10000; i++) {
+			for (int i = 1; i <300; i++) {
 				UserRating currentUserData = new UserRating(rows.get(i));
 				String[] row = rows.get(i);
 				int userId = Integer.parseInt(row[0]);
@@ -37,15 +37,19 @@ public class Main {
 			ItemRatingTreeMap itemRatingsMap = new ItemRatingTreeMap(userRatingTreeMap);
 			Map<Integer, Double> userAverage = userRatingTreeMap.getUserAvgRatings();
 
-			System.out.println(UserRatingUtil.calculateUserSimilarity(userRatingTreeMap.getUserRatingsMap(), itemRatingsMap.getItemRatingsMap(), userAverage));
+			Map<Integer, Map<Integer, Double>> similarityMap = UserRatingUtil.calculateUserSimilarity(userRatingTreeMap.getUserRatingsMap(), itemRatingsMap.getItemRatingsMap(), userAverage);
+			
+			System.out.println(similarityMap);
 			System.out.println(Recommender.predictUserRatingOnItem(userRatingTreeMap,itemRatingsMap,userRatingTreeMap.getUserRatings().get(1),
 					itemRatingsMap.getItemById(527)));
-//			System.out.println(UserRatingUtil.calculateUserSimilarity(userRatingsMap, itemRatingsMap, userRatingSet.getUserAvgRatings()));
+			//			System.out.println(UserRatingUtil.calculateUserSimilarity(userRatingsMap, itemRatingsMap, userRatingSet.getUserAvgRatings()));
 
+			System.out.println(UserRatingUtil.top10User(similarityMap, userRatingTreeMap.getRandomUser()));
+		
 		} catch (IOException | CsvException e) {
 			e.printStackTrace();
 		}
 	}
-//	Total number of ratings expected: 100836 , actual number of ratings: 100836
-//	{1={2=0.15045803482694003, 3=-0.8390106496954882}, 2={1=0.15045803482694003, 3=-0.24253562503633302}, 3={1=-0.8390106496954882, 2=-0.24253562503633302}}
+	//	Total number of ratings expected: 100836 , actual number of ratings: 100836
+	//	{1={2=0.15045803482694003, 3=-0.8390106496954882}, 2={1=0.15045803482694003, 3=-0.24253562503633302}, 3={1=-0.8390106496954882, 2=-0.24253562503633302}}
 }
