@@ -6,8 +6,8 @@ import java.util.Map;
 
 import com.atcs.models.UserRating;
 import com.atcs.utils.DataReader;
-import com.atcs.utils.UserRatingSet;
-import com.atcs.utils.UserRatingUtil;
+import com.atcs.utils.ItemRatingTreeMap;
+import com.atcs.utils.UserRatingTreeMap;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
 
@@ -18,16 +18,21 @@ public class Main {
 			List<String[]> rows = reader.readAll();
 			System.out.println("Total number of ratings expected: 100836 , actual number of ratings: " + (rows.size()-1));
 			//created new user rating set
-			UserRatingSet userRatingSet = new UserRatingSet();
+			UserRatingTreeMap userRatingTreeMap = new UserRatingTreeMap();
 
 			//TODO: sostituire 300 con rows.size()
 			for (int i = 1; i < 300; i++) {
 				UserRating currentUserData = new UserRating(rows.get(i));
-				//add user to custom set
-				userRatingSet.addUserRating(currentUserData);
-			}
+				String[] row = rows.get(i);
+				int userId = Integer.parseInt(row[0]);
+				int movieId = Integer.parseInt(row[1]);
+				Double rating = Double.parseDouble(row[2]);
 
-			Map<Integer, Double> userAverage = userRatingSet.getUserAvgRatings();
+				//add user to custom set
+				userRatingTreeMap.addUserRating(userId,movieId,rating,Long.parseLong(row[3]));
+			}
+			ItemRatingTreeMap itemRatingsMap = new ItemRatingTreeMap(userRatingTreeMap);
+			Map<Integer, Double> userAverage = userRatingTreeMap.getUserAvgRatings();
 
 //			System.out.println(UserRatingUtil.calculateUserSimilarity(userRatingsMap, itemRatingsMap, userAverage));
 //			System.out.println(UserRatingUtil.calculateUserSimilarity(userRatingsMap, itemRatingsMap, userRatingSet.getUserAvgRatings()));

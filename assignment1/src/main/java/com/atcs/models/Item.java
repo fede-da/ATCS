@@ -4,13 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class Item {
-    public Item(int id) {
-        this.id = id;
-        userIdAndItemRating = new HashMap<>();
-    }
+public class Item implements Cloneable {
     int id;
     public Map<Integer, Double> userIdAndItemRating;
+
+    public Item(int id) {
+        this.id = id;
+        this.userIdAndItemRating = new HashMap<>();
+    }
 
     public Integer getId() {
         return id;
@@ -31,5 +32,13 @@ public class Item {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        Item clonedItem = (Item) super.clone(); // This clones the Item object.
+        // Now clone the Map to ensure the cloned Item has a separate Map instance.
+        clonedItem.userIdAndItemRating = new HashMap<>(this.userIdAndItemRating);
+        return clonedItem;
     }
 }
