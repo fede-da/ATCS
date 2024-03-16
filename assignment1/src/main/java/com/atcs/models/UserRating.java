@@ -1,10 +1,10 @@
-package com.atcs;
+package com.atcs.models;
 
 import java.util.*;
 
 public class UserRating {
 	private int _userId;
-	public Map<Integer, Double> _movieRatings = new HashMap<>();
+	public Map<Item, Double> _movieRatings = new HashMap<>();
 
 	private long _timestamp;
 
@@ -34,10 +34,17 @@ public class UserRating {
 		this._timestamp = timestamp;
 	}
 	public void addMovieWithRating(Integer movieId, Double movieRating){
-		_movieRatings.put(movieId, movieRating);
+		_movieRatings.put(new Item(movieId), movieRating);
 	}
-	public Map<Integer, Double> getMovieRatings() {
+	public Map<Item, Double> getMovieRatings() {
 		return _movieRatings;
+	}
+	public Double getUserRatingAvg(){
+		Double _sum = 0.0;
+		for (Map.Entry<Item, Double> entry : _movieRatings.entrySet()) {
+			_sum+= entry.getValue();
+		}
+		return _sum/_movieRatings.size();
 	}
 	
 	@Override

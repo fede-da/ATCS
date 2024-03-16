@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class UserRatingUtil {
 
-	public static Double getRatingAvg(List<Map<Integer, Double>> movieUserRatings){
+	private static Double getRatingAvg(List<Map<Integer, Double>> movieUserRatings){
 		Double sum = 0.0;
 		for (int i=0; i<movieUserRatings.size(); i++) {
 			for(Map.Entry<Integer, Double> entry : movieUserRatings.get(i).entrySet()){
@@ -15,6 +15,7 @@ public class UserRatingUtil {
 		}
 		return sum;
 	}
+
 
 	/**
 	 * This method calculates the average rating for each user in a given map containing user ratings. 
@@ -113,7 +114,11 @@ public class UserRatingUtil {
 	 * @param userAverage Map containing average ratings for each user
 	 * @return A map where each userID is mapped to another map containing similarity scores with other users
 	 */
-	public static Map<Integer, Map<Integer, Double>> calculateUserSimilarity(Map<Integer, List<Map<Integer, Double>>> userRatingsMap, Map <Integer, Map<Integer, Double>> itemRatingsMap, Map<Integer, Double> userAverage) {
+	public static Map<Integer, Map<Integer, Double>> calculateUserSimilarity(
+			Map<Integer, List<Map<Integer,Double>>> userRatingsMap,
+			Map <Integer, Map<Integer, Double>> itemRatingsMap,
+			Map<Integer, Double> userAverage) {
+
 		Map<Integer, Map<Integer, Double>> userSimilarityMap = new HashMap<>();
 
 		for (Integer userA : userRatingsMap.keySet()) {
