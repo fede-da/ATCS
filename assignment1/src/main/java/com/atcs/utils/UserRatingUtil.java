@@ -143,7 +143,7 @@ public class UserRatingUtil {
 		return userSimilarityMap;
 	}
 
-	public static List<Integer> top10User (Map<Integer, Map<Integer, Double>> map, Integer user) {
+	public static List<Integer> top10Users (Map<Integer, Map<Integer, Double>> map, Integer user) {
 		List<Integer> listAllNeighbor = new ArrayList<>(); 
 		for (Map.Entry<Integer, Double> entry : map.get(user).entrySet()) {
 			listAllNeighbor.add(entry.getKey()); 
@@ -156,6 +156,18 @@ public class UserRatingUtil {
 				.collect(Collectors.toList());
 	}
 
+	public static List<Integer> top10Movies (Map<Integer, Map<Integer, Double>> map, Integer movie) {
+		List<Integer> listAllNeighbor = new ArrayList<>(); 
+		for (Map.Entry<Integer, Double> entry : map.get(movie).entrySet()) {
+			listAllNeighbor.add(entry.getKey()); 
+		}
+
+		Collections.sort(listAllNeighbor, (entry1, entry2) -> entry2.compareTo(entry1));
+	
+		return listAllNeighbor.stream()
+				.limit(10)
+				.collect(Collectors.toList());
+	}
 	
 
 	//	public static Map<Integer, Map<Integer, Double>> calculateUserSimilarity(
