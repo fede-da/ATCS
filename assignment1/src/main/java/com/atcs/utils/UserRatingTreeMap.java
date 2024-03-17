@@ -18,6 +18,7 @@ public class UserRatingTreeMap {
         } else {
             // If the userId exists, add the movie rating to the existing UserRating
             userRatings.get(userId).addMovieWithRating(movieId, movieRating);
+            userRatings.get(userId).addMovieWithTimestamp(movieId, _timestamp);
         }
     }
 

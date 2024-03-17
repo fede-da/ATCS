@@ -23,7 +23,7 @@ public class Main {
 			UserRatingTreeMap userRatingTreeMap = new UserRatingTreeMap();
 
 			//TODO: sostituire 300 con rows.size()
-			for (int i = 1; i <300; i++) {
+			for (int i = 1; i <1000; i++) {
 				UserRating currentUserData = new UserRating(rows.get(i));
 				String[] row = rows.get(i);
 				int userId = Integer.parseInt(row[0]);
@@ -36,9 +36,10 @@ public class Main {
 			ItemRatingTreeMap itemRatingsMap = new ItemRatingTreeMap(userRatingTreeMap);
 			Map<Integer, Double> userAverage = userRatingTreeMap.getUserAvgRatings();
 
-			Map<Integer, Map<Integer, Double>> similarityMap = UserRatingUtil.calculateUserSimilarity(userRatingTreeMap.getUserRatingsMap(), itemRatingsMap.getItemRatingsMap(), userAverage);
-			
+			Map<Integer, Map<Integer, Double>> similarityMap = UserRatingUtil.calculateUserSimilarity(userRatingTreeMap.getUserRatingsMap(), itemRatingsMap.getItemRatingsMap(), userAverage, userRatingTreeMap, false);
+			Map<Integer, Map<Integer, Double>> weightedSimilarityMap = UserRatingUtil.calculateUserSimilarity(userRatingTreeMap.getUserRatingsMap(), itemRatingsMap.getItemRatingsMap(), userAverage, userRatingTreeMap, true);
 			System.out.println(similarityMap);
+			System.out.println(weightedSimilarityMap);
 			System.out.println(Recommender.predictUserRatingOnItem(userRatingTreeMap,itemRatingsMap,userRatingTreeMap.getUserRatings().get(1),
 					itemRatingsMap.getItemById(527)));
 			//			System.out.println(UserRatingUtil.calculateUserSimilarity(userRatingsMap, itemRatingsMap, userRatingSet.getUserAvgRatings()));
@@ -46,11 +47,9 @@ public class Main {
 			int randomUser = userRatingTreeMap.getRandomUser(); 
 			System.out.println(UserRatingUtil.top10Users(similarityMap, randomUser));
 			System.out.println(Recommender.predictUserRatingOnItems(userRatingTreeMap, itemRatingsMap, userRatingTreeMap.getUserRatings().get(randomUser)));
-			
+
 		} catch (IOException | CsvException e) {
 			e.printStackTrace();
 		}
 	}
-	//	Total number of ratings expected: 100836 , actual number of ratings: 100836
-	//	{1={2=0.15045803482694003, 3=-0.8390106496954882}, 2={1=0.15045803482694003, 3=-0.24253562503633302}, 3={1=-0.8390106496954882, 2=-0.24253562503633302}}
 }
