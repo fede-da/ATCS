@@ -5,37 +5,37 @@ import java.util.*;
 public class UserRating {
 	private int _userId;
 	public Map<Item, Double> _movieRatings = new HashMap<>();
+	private Map<Integer, Long> _timestampRating = new HashMap<>();
 
-	private long _timestamp;
-
+	public UserRating() {
+		super();
+	}
 	public UserRating(int userId, int movieId, double movieRating, long timestamp){
 		_userId=userId;
 		this.addMovieWithRating(movieId,movieRating);
-		_timestamp=timestamp;
+		this.addMovieWithTimestamp(movieId, timestamp);
 	}
-
 	public UserRating(String[] userRatingRow){
 		_userId = Integer.parseInt(userRatingRow[0]);
 		this.addMovieWithRating(Integer.parseInt(userRatingRow[1]),Double.parseDouble(userRatingRow[2]));
-		_timestamp=Long.parseLong(userRatingRow[3]);
+		this.addMovieWithTimestamp(Integer.parseInt(userRatingRow[1]), Long.parseLong(userRatingRow[3]));
 	}
-
+	
+	public void addMovieWithRating(Integer movieId, Double movieRating){
+		_movieRatings.put(new Item(movieId), movieRating);
+	}
+	
+	public void addMovieWithTimestamp(int movieId, long timestamp){
+		_timestampRating.put(movieId, timestamp);
+	}
+	
 	public int getUserId() {
 		return _userId;
 	}
 	public void setUserId(int userId) {
 		this._userId = userId;
 	}
-
-	public long getTimestamp() {
-		return _timestamp;
-	}
-	public void setTimestamp(long timestamp) {
-		this._timestamp = timestamp;
-	}
-	public void addMovieWithRating(Integer movieId, Double movieRating){
-		_movieRatings.put(new Item(movieId), movieRating);
-	}
+	
 	public Map<Item, Double> getMovieRatings() {
 		return _movieRatings;
 	}
@@ -47,9 +47,18 @@ public class UserRating {
 		return _sum/_movieRatings.size();
 	}
 	
+	public Map<Integer, Long> get_timestampRating() {
+		return _timestampRating;
+	}
+
+	public void set_timestampRating(Map<Integer, Long> _timestampRating) {
+		this._timestampRating = _timestampRating;
+	}
+
 	@Override
 	public String toString() {
-		return "UserRating [userId=" + _userId + ", movieRatings=" + _movieRatings + ", timestamp=" + _timestamp + "]";
+		return "UserRating [_userId=" + _userId + ", _movieRatings=" + _movieRatings + ", _timestampRating="
+				+ _timestampRating + "]";
 	}
 
 	public Map<Integer, Double> getMovieRatingAsInteger(){

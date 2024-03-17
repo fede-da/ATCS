@@ -21,7 +21,8 @@ public class Recommender {
 		double numeratorSum = 0.0;
 		for(Integer currentUserId : _userRatingsMap.getUserRatings().keySet()) {
 			//Map<Integer, Double> tmpMap = UserRatingUtil.calculateUserSimilarity(_userRatingsMap, _itemRatingsMap, _userRatingsMap.getUserAvgRatings()).get(ur.getUserId());
-			Map<Integer, Double> tmpMap = UserRatingUtil.calculateUserSimilarity(_userRatingsMap.getUserRatingsMap(), _itemRatingsMap.getItemRatingsMap(), _userRatingsMap.getUserAvgRatings()).get(ur.getUserId());
+			Map<Integer, Double> map = _userRatingsMap.getUserAvgRatings(); 
+			Map<Integer, Double> tmpMap = UserRatingUtil.calculateUserSimilarity(_userRatingsMap.getUserRatingsMap(), _itemRatingsMap.getItemRatingsMap(), map, _userRatingsMap, false).get(ur.getUserId());
 			if(tmpMap.get(currentUserId)!=null){
 				sim = tmpMap.get(currentUserId);
 				Map<Integer, Double> ratingUserjItem = _itemRatingsMap.getItemRatingsMap().get(currentUserId);
@@ -48,7 +49,8 @@ public class Recommender {
 		double numerator = predictUserRatingOnItemNumerator(_userRatingsMap, _itemRatingsMap, ur);
 		double denumerator = 0.0;
 		for(Integer currentUserId : _userRatingsMap.getUserRatings().keySet()){
-			Map<Integer, Map<Integer, Double>> tmpMap = UserRatingUtil.calculateUserSimilarity(_userRatingsMap.getUserRatingsMap(),_itemRatingsMap.getItemRatingsMap(),_userRatingsMap.getUserAvgRatings());
+			Map<Integer, Double> map2 = _userRatingsMap.getUserAvgRatings(); 
+			Map<Integer, Map<Integer, Double>> tmpMap = UserRatingUtil.calculateUserSimilarity(_userRatingsMap.getUserRatingsMap(),_itemRatingsMap.getItemRatingsMap(), map2,  _userRatingsMap, false);
 			Map<Integer, Double> tmpMapInner =tmpMap.get(ur.getUserId());
 			if(tmpMapInner!=null){
 				if(tmpMapInner.get(currentUserId)!=null)
@@ -70,7 +72,8 @@ public class Recommender {
 		for (Integer movieId : _itemRatingsMap.getItemRatingsMap().keySet()) {
 			double value = 0.0; 
 			for(Integer currentUserId : _userRatingsMap.getUserRatings().keySet()){
-				Map<Integer, Map<Integer, Double>> tmpMap = UserRatingUtil.calculateUserSimilarity(_userRatingsMap.getUserRatingsMap(),_itemRatingsMap.getItemRatingsMap(),_userRatingsMap.getUserAvgRatings());
+				Map<Integer, Double> map1 = _userRatingsMap.getUserAvgRatings(); 
+				Map<Integer, Map<Integer, Double>> tmpMap = UserRatingUtil.calculateUserSimilarity(_userRatingsMap.getUserRatingsMap(),_itemRatingsMap.getItemRatingsMap(), map1,  _userRatingsMap, false);
 				Map<Integer, Double> tmpMapInner =tmpMap.get(ur.getUserId());
 				if(tmpMapInner!=null){
 					if(tmpMapInner.get(currentUserId)!=null)

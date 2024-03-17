@@ -1,11 +1,14 @@
 package com.atcs.utils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import com.atcs.models.UserRating;
 
 public class UserRatingUtil {
 	private static Integer _userA = 0;
@@ -47,7 +50,7 @@ public class UserRatingUtil {
 	 * @param userAverage Map containing average ratings for each user
 	 * @return The numerator for Pearson correlation coefficient
 	 */
-	public static Double getNumerator (Integer a, Integer b, Map<Integer, Map<Integer,Double>> itemRatingsMap, Map<Integer, Double> userAverage){
+	public static Double getNumerator (Integer a, Integer b, Map<Integer, Map<Integer,Double>> itemRatingsMap, Map<Integer, Double> userAverage, UserRating userRatingA, UserRating userRatingB, double lambda, boolean weightedFunction){
 		double bigSum = 0.0;
 		double diffA = 0.0;
 		double diffB = 0.0;
@@ -57,6 +60,25 @@ public class UserRatingUtil {
 			double ratingBUserjItem = 0.0;
 			double avgA = 0.0;
 			double avgB = 0.0;
+			double weight = 1; 
+			if(userRatingA != null && userRatingB != null) {
+				if(userRatingA.get_timestampRating()!=null && userRatingB.get_timestampRating() != null) {
+					Calendar calendar = Calendar.getInstance();
+					calendar.set(1880, Calendar.JANUARY, 1, 0, 0, 0);
+					long oldTimestamp = calendar.getTimeInMillis();
+
+					Long valueA=oldTimestamp; 
+					Long valueB=oldTimestamp; 
+					if (userRatingA.get_timestampRating().get(j) != null) {
+						valueA = userRatingA.get_timestampRating().get(j); 
+					}
+					if (userRatingB.get_timestampRating().get(j) != null) {
+						valueB = userRatingB.get_timestampRating().get(j); 
+					}
+					Long max = Math.max(valueA, valueB); 
+					weight = Math.exp(-lambda * Math.abs(max));
+				}
+			}
 			Map<Integer,Double> ratingUserjItem = itemRatingsMap.get(j);
 			if (ratingUserjItem != null && userAverage != null) {
 				if(ratingUserjItem.get(a) != null) {
@@ -74,7 +96,11 @@ public class UserRatingUtil {
 			}
 			diffA = ratingAUserjItem - avgA;
 			diffB = ratingBUserjItem - avgB;
-			bigSum += diffA * diffB;
+			if (weightedFunction == true) {
+				bigSum += weight * (diffA * diffB);
+			} else {
+				bigSum += diffA * diffB; 
+			}
 		}
 		return bigSum;
 	}
@@ -119,14 +145,19 @@ public class UserRatingUtil {
 	 * @return A map where each userID is mapped to another map containing similarity scores with other users
 	 */
 	//public static Map<Integer, Map<Integer, Double>> calculateUserSimilarity(
-	public static Map<Integer, Map<Integer, Double>> calculateUserSimilarity(Map<Integer, Map<Integer, Double>> userRatingsMap, Map <Integer, Map<Integer, Double>> itemRatingsMap, Map<Integer, Double> userAverage) {
+	public static Map<Integer, Map<Integer, Double>> calculateUserSimilarity(Map<Integer, Map<Integer, Double>> userRatingsMap, Map <Integer, Map<Integer, Double>> itemRatingsMap, Map<Integer, Double> userAverage, UserRatingTreeMap userRatingTreeMap, boolean weightedFunction) {
 		Map<Integer, Map<Integer, Double>> userSimilarityMap = new HashMap<>();
 
 		for (Integer userA : userRatingsMap.keySet()) {
 			Map<Integer, Double> similarityScores = new HashMap<>();
 			for (Integer userB : userRatingsMap.keySet()) {
 				if (!userA.equals(userB)) {
-					double num = getNumerator(userA, userB, itemRatingsMap, userAverage);
+					UserRating userRatingA = userRatingTreeMap.getUserRatings().get(userA); 
+					UserRating userRatingB = userRatingTreeMap.getUserRatings().get(userB); 
+
+					double num = getNumerator(userA, userB, itemRatingsMap, userAverage, userRatingA, userRatingB, 0.0000001, weightedFunction);
+
+
 					double denom1 = getUserDenom(userA, itemRatingsMap, userAverage);
 					double denom2 = getUserDenom(userB, itemRatingsMap, userAverage);
 
@@ -150,7 +181,7 @@ public class UserRatingUtil {
 		}
 
 		Collections.sort(listAllNeighbor, (entry1, entry2) -> entry2.compareTo(entry1));
-	
+
 		return listAllNeighbor.stream()
 				.limit(10)
 				.collect(Collectors.toList());
@@ -163,94 +194,9 @@ public class UserRatingUtil {
 		}
 
 		Collections.sort(listAllNeighbor, (entry1, entry2) -> entry2.compareTo(entry1));
-	
+
 		return listAllNeighbor.stream()
 				.limit(10)
 				.collect(Collectors.toList());
 	}
-	
-
-	//	public static Map<Integer, Map<Integer, Double>> calculateUserSimilarity(
-	//			UserRatingTreeMap _userRatingsMap,
-	//			ItemRatingTreeMap _itemRatingsMap,
-	//			Map<Integer, Double> userAverage) {
-	//
-	//		Map<Integer, Map<Integer, Double>> userSimilarityMap = new HashMap<>();
-	//		Map<Integer, Map<Integer, Double>> itemRatingsMap = _itemRatingsMap.getItemRatingsMap();
-	//		double numerator = 0.0;
-	//		double diffA = 0.0;
-	//		double diffB = 0.0;
-	//		double denumA = 0.0;
-	//		double denumB = 0.0;
-	//		double denumASqrt = 0.0;
-	//		double denumBSqrt= 0.0;
-	//		double similarity = 0.0;
-	//		Map<Integer, Double> similarityScores = new HashMap<>();
-	//
-	//		for (Integer itemId : _itemRatingsMap.getItemRatingsMap().keySet()) {
-	//			double ratingAUserjItem = 0.0;
-	//			double ratingBUserjItem = 0.0;
-	//			double avgA = 0.0;
-	//			double avgB = 0.0;
-	//
-	//			Map<Integer, Double> ratingUserjItem = itemRatingsMap.get(itemId);
-	//			if (ratingUserjItem != null && userAverage != null) {
-	////			double num = 0.0;
-	////			double denom1 = 0.0;
-	////			double denom2 = 0.0;
-	////			double similarity = 0.0;
-	//			for (Integer userA : _itemRatingsMap.getInnerItemRatingsMapByItemId(itemId).keySet()) {
-	//					_userA = userA;
-	//					Map<Integer, Map<Integer, Double>> map = new HashMap<>();
-	//					for (Integer userB : _itemRatingsMap.getInnerItemRatingsMapByItemId(itemId).keySet()) {
-	//						_userB = userB;
-	//						if (ratingUserjItem.get(userA) != null) {
-	//							ratingAUserjItem = ratingUserjItem.get(userA);
-	//						}
-	//						if (userAverage.get(userA) != null) {
-	//							avgA = userAverage.get(userA);
-	//						}
-	//						if (ratingUserjItem.get(userB) != null) {
-	//							ratingBUserjItem = ratingUserjItem.get(userB);
-	//						}
-	//						if (userAverage.get(userB) != null) {
-	//							avgB = userAverage.get(userB);
-	//						}
-	//						diffA = ratingAUserjItem - avgA;
-	//						diffB = ratingBUserjItem - avgB;
-	//						numerator += diffA * diffB;
-	//						denumA += Math.pow(diffA, 2);
-	//						denumB += Math.pow(diffB, 2);
-	//						denumASqrt= Math.sqrt(denumA);
-	//						denumBSqrt= Math.sqrt(denumB);
-	//						if(denumASqrt==0.0 || denumBSqrt == 0.0 ) return null;
-	//						similarity=numerator/(denumASqrt*denumBSqrt);
-	//						similarityScores.put(_userB, similarity);
-	//					}
-	////					if (!userA.equals(userB)) {
-	////						num = getNumerator(userA, userB, itemRatingsMap, userAverage);
-	////						denom1 = getUserDenom(userA, itemRatingsMap, userAverage);
-	////						denom2 = getUserDenom(userB, itemRatingsMap, userAverage);
-	////						if (denom1 == 0.0 || denom2 == 0.0) {
-	////							return null;
-	////						}
-	////						similarity = num / (denom1 * denom2);
-	////						similarityScores.put(userB, similarity);
-	////					}
-	//				}
-	//				//userSimilarityMap.put(userA, similarityScores);
-	//			}
-	//			diffA = ratingAUserjItem - avgA;
-	//			diffB = ratingBUserjItem - avgB;
-	//			numerator += diffA * diffB;
-	//			denumA += Math.pow(diffA, 2);
-	//			denumB += Math.pow(diffB, 2);
-	//		}
-	//		denumASqrt= Math.sqrt(denumA);
-	//		denumBSqrt= Math.sqrt(denumB);
-	//		if(denumASqrt==0.0 || denumBSqrt == 0.0 ) return null;
-	//		similarity=numerator/(denumASqrt*denumBSqrt);
-	//		similarityScores.put(_userB, similarity);
-	//		return userSimilarityMap;
-	//	}
 }
