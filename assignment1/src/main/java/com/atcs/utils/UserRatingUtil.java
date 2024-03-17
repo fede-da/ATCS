@@ -11,8 +11,6 @@ import java.util.stream.Collectors;
 import com.atcs.models.UserRating;
 
 public class UserRatingUtil {
-	private static Integer _userA = 0;
-	private static Integer _userB = 0;
 	private static Double getRatingAvg(List<Map<Integer, Double>> movieUserRatings){
 		Double sum = 0.0;
 		for (int i=0; i<movieUserRatings.size(); i++) {

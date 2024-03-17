@@ -1,10 +1,11 @@
 package com.atcs;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.atcs.models.UserRating;
+import com.atcs.recommender.GroupRecommender;
 import com.atcs.recommender.Recommender;
 import com.atcs.utils.DataReader;
 import com.atcs.utils.ItemRatingTreeMap;
@@ -15,22 +16,19 @@ import com.opencsv.exceptions.CsvException;
 
 public class Main {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws NumberFormatException, Exception {
 		try (CSVReader reader = new CSVReader(DataReader.getRatingsBufferedReader())) {
 			List<String[]> rows = reader.readAll();
-			System.out.println("Total number of ratings expected: 100836 , actual number of ratings: " + (rows.size()-1));
-			//created new user rating set
+			System.out.println("Total number of ratings expected: 100836 , actual number of ratings: " + (rows.size()-1) + "\n");
 			UserRatingTreeMap userRatingTreeMap = new UserRatingTreeMap();
 
-			//TODO: sostituire 300 con rows.size()
-			for (int i = 1; i <1000; i++) {
-				UserRating currentUserData = new UserRating(rows.get(i));
+			//Use 300 to shortener waiting time 
+			for (int i = 1; i <rows.size(); i++) {
 				String[] row = rows.get(i);
 				int userId = Integer.parseInt(row[0]);
 				int movieId = Integer.parseInt(row[1]);
 				Double rating = Double.parseDouble(row[2]);
 
-				//add user to custom set
 				userRatingTreeMap.addUserRating(userId,movieId,rating,Long.parseLong(row[3]));
 			}
 			ItemRatingTreeMap itemRatingsMap = new ItemRatingTreeMap(userRatingTreeMap);
@@ -38,15 +36,33 @@ public class Main {
 
 			Map<Integer, Map<Integer, Double>> similarityMap = UserRatingUtil.calculateUserSimilarity(userRatingTreeMap.getUserRatingsMap(), itemRatingsMap.getItemRatingsMap(), userAverage, userRatingTreeMap, false);
 			Map<Integer, Map<Integer, Double>> weightedSimilarityMap = UserRatingUtil.calculateUserSimilarity(userRatingTreeMap.getUserRatingsMap(), itemRatingsMap.getItemRatingsMap(), userAverage, userRatingTreeMap, true);
-			System.out.println(similarityMap);
-			System.out.println(weightedSimilarityMap);
-			System.out.println(Recommender.predictUserRatingOnItem(userRatingTreeMap,itemRatingsMap,userRatingTreeMap.getUserRatings().get(1),
-					itemRatingsMap.getItemById(527)));
-			//			System.out.println(UserRatingUtil.calculateUserSimilarity(userRatingsMap, itemRatingsMap, userRatingSet.getUserAvgRatings()));
+			
+			int randomUser1 = userRatingTreeMap.getRandomUser();
+			int randomUser2 = userRatingTreeMap.getRandomUser();
+			int randomUser3 = userRatingTreeMap.getRandomUser();
+			int randomItem = itemRatingsMap.getRandomItem();
+			
+			double predictionValue = Recommender.predictUserRatingOnItem(userRatingTreeMap,itemRatingsMap,userRatingTreeMap.getUserRatings().get(randomUser1), itemRatingsMap.getItemById(randomItem)); 
+			
+			System.out.println("Pearson correlation function for computing similarities between users: " + similarityMap + "\n");
+			System.out.println("Prediction function for predicting movies scores: " + predictionValue + "\n");
+			
+			System.out.println("10 most similar users: " + UserRatingUtil.top10Users(similarityMap, randomUser1) + "\n");
+			System.out.println("10 most relevant movies that the recommender suggests: " + Recommender.predictUserRatingOnItems(userRatingTreeMap, itemRatingsMap, userRatingTreeMap.getUserRatings().get(randomUser1)) + "\n");
 
-			int randomUser = userRatingTreeMap.getRandomUser(); 
-			System.out.println(UserRatingUtil.top10Users(similarityMap, randomUser));
-			System.out.println(Recommender.predictUserRatingOnItems(userRatingTreeMap, itemRatingsMap, userRatingTreeMap.getUserRatings().get(randomUser)));
+			System.out.println("Weighted Pearson correlation function for computing similarities between users: " + weightedSimilarityMap + "\n");
+			
+			List<Integer> userGroup = new ArrayList<>(); 
+			userGroup.add(randomUser1); 
+			userGroup.add(randomUser2); 
+			userGroup.add(randomUser3); 
+			List<Integer> movieListWithAvgMethod = GroupRecommender.getGroupRecommendations(userGroup, userRatingTreeMap, itemRatingsMap, true, false, false); 
+			List<Integer> movieListWithLeastMethod = GroupRecommender.getGroupRecommendations(userGroup, userRatingTreeMap, itemRatingsMap, false, true, false); 
+			List<Integer> movieListWithDisagreementMethod = GroupRecommender.getGroupRecommendations(userGroup, userRatingTreeMap, itemRatingsMap, false, false, true); 
+
+			System.out.println("Group recommendations with the first aggregation approach, average method: " + movieListWithAvgMethod + "\n"); 
+			System.out.println("Group recommendations with the first aggregation approach, least misery method:" + movieListWithLeastMethod + "\n"); 
+			System.out.println("Group recommendations with method that takes disagreements into account: " + movieListWithDisagreementMethod + "\n"); 
 
 		} catch (IOException | CsvException e) {
 			e.printStackTrace();
