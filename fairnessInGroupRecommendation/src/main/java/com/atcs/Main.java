@@ -2,9 +2,11 @@ package com.atcs;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.atcs.models.Item;
 import com.atcs.recommender.GroupRecommender;
 import com.atcs.recommender.Recommender;
 import com.atcs.utils.DataReader;
@@ -62,7 +64,17 @@ public class Main {
 
 			System.out.println("Group recommendations with the first aggregation approach, average method: " + movieListWithAvgMethod + "\n"); 
 			System.out.println("Group recommendations with the first aggregation approach, least misery method:" + movieListWithLeastMethod + "\n"); 
-			System.out.println("Group recommendations with method that takes disagreements into account: " + movieListWithDisagreementMethod + "\n"); 
+			System.out.println("Group recommendations with method that takes disagreements into account: " + movieListWithDisagreementMethod + "\n");
+
+			// Sequential recommendations print
+			Collection<Collection<Item>> sequentinalRecommendations = GroupRecommender.recommendMovieForUsersGroup(userRatingTreeMap.getUserRatings().values());
+			for(Collection<Item> items : sequentinalRecommendations){
+				System.out.println("Recommended Item ids: ");
+				for(Item i : items){
+					i.toString();
+				}
+			}
+
 
 		} catch (IOException | CsvException e) {
 			e.printStackTrace();

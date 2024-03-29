@@ -46,4 +46,9 @@ public class Item implements Cloneable {
         clonedItem.userIdAndItemRating = new HashMap<>(this.userIdAndItemRating);
         return clonedItem;
     }
+
+    @Override
+    public String toString() {
+        return " " + id ;
+    }
 }
