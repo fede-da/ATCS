@@ -197,4 +197,19 @@ public class UserRatingUtil {
 				.limit(10)
 				.collect(Collectors.toList());
 	}
+	
+	
+    public static boolean areAllElementsEqual(List<Integer> list) {
+        if (list == null || list.isEmpty()) {
+            return false;
+        }
+
+        Integer first = list.get(0);
+        for (int i = 1; i < list.size(); i++) {
+            if (!first.equals(list.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
