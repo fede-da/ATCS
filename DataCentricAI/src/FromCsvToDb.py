@@ -4,15 +4,10 @@ import pandas as pd
 from psycopg2 import sql
 from datetime import datetime
 from DataCentricAI.src.constants.constants import USAHousingCsvPath, USAHousingTableName
+from db_manager import fetch_data_from_db, connect_to_db
 
 # Database configuration
-conn_params = {
-    'dbname': 'postgres',
-    'user': 'Giorgia2',
-    'password': 'postgres',
-    'host': 'localhost',
-    'port': '5432'
-}
+conn_params = connect_to_db()
 
 # Connection to db
 conn = psycopg2.connect(**conn_params)
