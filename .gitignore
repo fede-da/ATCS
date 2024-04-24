@@ -83,3 +83,7 @@ local.properties
 **/target/
 *.log
 
+# virual environments
+venv/
+
+

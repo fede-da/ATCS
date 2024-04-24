@@ -15,6 +15,9 @@ In order to build it, follow these steps:
 1. open terminal
 2. navigate to ATCS folder and locate **POM.xml** file 
 3. build the maven project typing in terminal `mvn install`
+4. run `set-up.sh`
+
+
 
 Now you're ready to go!
 
