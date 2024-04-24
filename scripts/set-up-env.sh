@@ -11,7 +11,7 @@ else
     # Change the directory to the one specified by the environment variable
     cd "${!var_name}" || { echo "Failed to change directory to ${!var_name}"; exit 1; }
     echo "Successfully changed directory to ${!var_name}"
-    python3 -m venv atcs
-    source atcs/bin/activate # On Windows use 'atcs\Scripts\activate'
+    python3 -m venv venv
+    source venv/bin/activate # On Windows use 'atcs\Scripts\activate'
     echo "Successfully activated atcs environment"
 fi
