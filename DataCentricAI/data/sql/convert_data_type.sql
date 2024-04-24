@@ -15,7 +15,7 @@ USING avg_area_number_of_rooms::DOUBLE PRECISION;
 
 -- Modify column area_number_of_bedrooms to DOUBLE PRECISION type
 ALTER TABLE "USA_HOUSING"
-ALTER COLUMN area_number_of_bedrooms TYPE DOUBLE PRECISION
+ALTER COLUMN avg_area_number_of_bedrooms TYPE DOUBLE PRECISION
 USING avg_area_number_of_bedrooms::DOUBLE PRECISION;
 
 -- Modify column area_population to DOUBLE PRECISION type

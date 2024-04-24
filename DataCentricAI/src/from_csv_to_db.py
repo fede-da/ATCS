@@ -2,10 +2,10 @@ import psycopg2
 import pandas as pd
 from psycopg2 import sql
 from DataCentricAI.src.constants.constants import USAHousingCsvPath, USAHousingTableName
-from db_manager import connect_to_db
+from db_manager import connect_to_db_from_csv_to_db
 
 # Database configuration
-conn_params = connect_to_db()
+conn_params = connect_to_db_from_csv_to_db()
 
 # Connection to db
 conn = psycopg2.connect(**conn_params)
