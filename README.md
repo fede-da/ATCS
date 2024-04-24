@@ -18,7 +18,6 @@ In order to build it, follow these steps:
 4. run `set-up.sh`
 
 
-
 Now you're ready to go!
 
 ## Execute sub-modules
