@@ -84,6 +84,6 @@ local.properties
 *.log
 
 # virual environments
-atcs/
+venv/
 
 
