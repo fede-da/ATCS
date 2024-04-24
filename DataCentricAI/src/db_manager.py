@@ -1,6 +1,7 @@
 import psycopg2
 
 
+# Function to connect to the database
 def connect_to_db():
     conn = psycopg2.connect(
         dbname="postgres",
@@ -12,9 +13,10 @@ def connect_to_db():
     return conn
 
 
-def fetch_data_from_db(conn):
+# Function to fetch data from the database based on a specified query
+def fetch_data_from_db(conn, query):
     cur = conn.cursor()
-    cur.execute('SELECT * FROM "USA_HOUSING"')
+    cur.execute(query)
     rows = cur.fetchall()
     cur.close()
     return rows

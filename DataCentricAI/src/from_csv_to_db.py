@@ -1,44 +1,51 @@
+import psycopg2
 import pandas as pd
-from sqlalchemy import create_engine, text
+from psycopg2 import sql
 from DataCentricAI.src.constants.constants import USAHousingCsvPath, USAHousingTableName
-
-# Function to connect to the PostgreSQL database
-def connect_to_db():
-    connection_string = "postgresql://Giorgia2:postgres@localhost:5432/postgres"
-    engine = create_engine(connection_string)
-    return engine
-
-def infer_sql_dtypes(df):
-    dtype_mapping = {
-        "object": "VARCHAR",
-        "float64": "FLOAT",
-        "int64": "INT",
-        "datetime64[ns]": "TIMESTAMP",
-    }
-    sql_types = {column: dtype_mapping[str(df[column].dtype)] for column in df.columns}
-    return sql_types
+from db_manager import connect_to_db
 
 # Database configuration
-engine = connect_to_db()
+conn_params = connect_to_db()
 
-df = pd.read_csv(USAHousingCsvPath)
+# Connection to db
+conn = psycopg2.connect(**conn_params)
 
-# Infer SQL data types
-sql_types = infer_sql_dtypes(df)
+cur = conn.cursor()
 
-df.columns = [c.replace('.', '') for c in df.columns]
-df.columns = [c.replace(' ', '_') for c in df.columns]
+# Read CSV file into pandas DataFrame
+USAHousingCsv = pd.read_csv(USAHousingCsvPath)
 
-create_table_command = f"CREATE TABLE {USAHousingTableName} ("
-for column, dtype in sql_types.items():
-    create_table_command += (f"{column.replace(' ', '_').lower()} {dtype}, ").replace('.', '')
-create_table_command = create_table_command.strip(", ") + ");"
+# Clean column names
+USAHousingCsv.columns = [c.replace('.', '') for c in USAHousingCsv.columns]
+USAHousingCsv.columns = [c.replace(' ', '_') for c in USAHousingCsv.columns]
 
-# Create the table in the database
-with engine.connect() as connection:
-    connection.execute(text(create_table_command))  # Use text to execute raw SQL
+# Prepare column definitions for table creation
+columns = ", ".join(
+    [f"{column} VARCHAR" for column in USAHousingCsv.columns])  # Assuming all data types as VARCHAR for simplicity
 
-# Load data into the PostgreSQL table
-df.to_sql(USAHousingTableName, engine, if_exists='replace', index=False, dtype=sql_types)
+# SQL query to create table
+create_table_query = sql.SQL("CREATE TABLE IF NOT EXISTS {} ({})").format(
+    sql.Identifier(USAHousingTableName),
+    sql.SQL(columns)
+)
+# Execute the SQL statement
+cur.execute(create_table_query)
 
-print(f"Table {USAHousingTableName} created and data inserted successfully.")
+columns = ", ".join(
+    [f"{column}" for column in USAHousingCsv.columns])  # Assuming all data types as VARCHAR for simplicity
+
+# SQL query to insert data into the table
+insert_query = sql.SQL("INSERT INTO {} ({}) VALUES ({})").format(
+    sql.Identifier(USAHousingTableName),
+    sql.SQL(columns),
+    sql.SQL(', ').join([sql.Placeholder()] * len(USAHousingCsv.columns))
+)
+
+# Insert data
+for index, row in USAHousingCsv.iterrows():
+    cur.execute(insert_query, tuple(row))
+
+conn.commit()
+
+cur.close()
+conn.close()
