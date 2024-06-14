@@ -1,6 +1,5 @@
 import pandas as pd
 import time
-from Levenshtein import distance as levenshtein_distance
 from concurrent.futures import ProcessPoolExecutor
 
 class StreamerPartnershipAnalyzer:
