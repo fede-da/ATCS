@@ -1,6 +1,6 @@
 import csv
 
-from mining_on_large_graph.models.node import Node
+from models.node import Node
 
 
 class Reader:
@@ -47,7 +47,7 @@ class Reader:
     @staticmethod
     def save_nodes_to_csv(nodes_dict, output_file_path=None):
         if output_file_path is None:
-            output_file_path = './data/large_twitch_features.csv'
+            output_file_path = './data/large_twitch_followers.csv'
         with open(output_file_path, mode='w', newline='') as file:
             fieldnames = ['created_at', 'numeric_id', 'language', 'affiliate', 'followers']
             writer = csv.DictWriter(file, fieldnames=fieldnames)
