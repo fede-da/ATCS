@@ -43,3 +43,21 @@ class Reader:
         # Sort the nodes based on the 'follower' attribute in descending order
         sorted_nodes = sorted(nodes_dict.values(), key=lambda x: x.followers, reverse=True)
         return sorted_nodes[:10]
+
+    @staticmethod
+    def save_nodes_to_csv(nodes_dict, output_file_path=None):
+        if output_file_path is None:
+            output_file_path = './data/large_twitch_features.csv'
+        with open(output_file_path, mode='w', newline='') as file:
+            fieldnames = ['created_at', 'numeric_id', 'language', 'affiliate', 'followers']
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            
+            writer.writeheader()
+            for node in nodes_dict.values():
+                writer.writerow({
+                    'created_at': node.created_at.strftime('%Y-%m-%d'),
+                    'numeric_id': node.numeric_id,
+                    'language': node.language,
+                    'affiliate': int(node.affiliate),
+                    'followers': node.followers
+                })
