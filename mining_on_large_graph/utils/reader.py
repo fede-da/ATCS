@@ -1,6 +1,6 @@
 import csv
 
-from models.node import Node
+from mining_on_large_graph.models.node import Node
 
 
 class Reader:
