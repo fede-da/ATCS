@@ -87,3 +87,8 @@ local.properties
 venv/
 
 
+mining_on_large_graph/__pycache__/
+.vs/
+mining_on_large_graph/data/
+mining_on_large_graph/models/__pycache__/
+mining_on_large_graph/utils/__pycache__/
